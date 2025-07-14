@@ -38,6 +38,44 @@
   The system is designed for a single-thread, in-memory simulation only.
 
 
+## Algorithms, Data Structures, and Design Patterns Used
+
+### 1. PriorityQueue (Min-Heap) for Dispatch Order
+
+- **Java Class Used:** `PriorityQueue<Package>`
+- **Why:** To always pick the highest-priority package in `O(log n)` time.
+- **Comparator Logic:**
+  - EXPRESS packages are prioritized over STANDARD.
+  - If both are the same, the one with the earlier **deadline** is prioritized.
+  - If deadlines match, the one with the earlier **order time** is prioritized.
+
+```java
+PriorityQueue<Package> packageQueue = new PriorityQueue<>((a, b) -> {
+    if (a.getPriority() != b.getPriority()) {
+        return a.getPriority() == Priority.EXPRESS ? -1 : 1;
+    }
+    if (a.getDeadline() != b.getDeadline()) {
+        return Long.compare(a.getDeadline(), b.getDeadline());
+    }
+    return Long.compare(a.getOrderTime(), b.getOrderTime());
+});
+```
+
+### 2. Greedy Algorithm for Rider Assignment
+
+- **Approach:** Select the first available and eligible rider for each pending package.
+- **Why:** It's a fast and straightforward strategy in real-time systems to reduce latency, even if it's not globally optimal.
+
+### 3. Object-Oriented Design Patterns
+
+- **Encapsulation:**  Classes like Rider, Package, and AuditEvent encapsulate their state and behavior.
+- **Separation of Concerns:** ll dispatch logic is isolated in the DispatchCenter service class.
+- **Extensibility:** New rules, filters, or scoring logic can be easily added without impacting core flow.
+
+### 4. Other Data structure and Algos used:
+- HashMap for Constant-Time Access
+- ArrayList for Ordered Audit Trail
+- Filtering with Java Streams
 ---
 
 ## 🙋 Author
